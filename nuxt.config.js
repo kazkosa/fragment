@@ -1,3 +1,5 @@
+const { API_KEY1, API_URL } = process.env
+
 export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
@@ -12,7 +14,11 @@ export default {
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
-      { name: 'format-detection', content: 'telephone=no' },
+      {
+        name: 'format-detection',
+        // content: 'telephone=no',
+        content: process.env.npm_package_description,
+      },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
@@ -21,7 +27,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: ['~/plugins/filter.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -29,7 +35,14 @@ export default {
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/typescript
-    '@nuxt/typescript-build',
+    // '@nuxt/typescript-build',
+    [
+      '@nuxt/typescript-build',
+      {
+        typeCheck: true,
+        ignoreNotFoundWarnings: true,
+      },
+    ],
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
   ],
@@ -48,4 +61,21 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+  generate: {
+    fallback: true,
+  },
+  publicRuntimeConfig: {
+    apiUrl: API_URL,
+    apiKey: API_KEY1,
+  },
+  privateRuntimeConfig: {
+    apiKey: API_KEY1,
+  },
+  typescript: {
+    typeCheck: {
+      eslint: {
+        files: './**/*.{ts,js,vue}',
+      },
+    },
+  },
 }
